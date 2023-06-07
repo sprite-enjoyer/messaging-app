@@ -10,7 +10,7 @@
     "build": "tsc",
     "buildAndStart": "npm run build && npm run nodemon",
     "deployBuild": "npm i && tsc",
-    "deployStart": "node ./dist/index.js"
+    "deployStart": "npm run deployBuild && node ./dist/index.js"
   },
   "keywords": [],
   "author": "",
