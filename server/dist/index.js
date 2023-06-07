@@ -14,13 +14,13 @@ const PORT = 3000;
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
 app.use((0, cors_1.default)({
-    origin: process.env.CLIENT_URL,
-    methods: "*",
+    origin: [String(process.env.CLIENT_URL)],
+    methods: ["GET", "POST"],
 }));
 const httpServer = (0, http_1.createServer)(app);
 const io = new socket_io_1.Server(httpServer, {
     cors: {
-        origin: process.env.CLIENT_URL
+        origin: process.env.CLIENT_URL?.toString()
     }
 });
 io.on('connection', (socket) => {
