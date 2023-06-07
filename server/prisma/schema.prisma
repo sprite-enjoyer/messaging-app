@@ -11,20 +11,24 @@ datasource db {
 }
 
 model User {
-  id       String         @id @default(auto()) @map("_id") @db.ObjectId
-  userName String         @unique
-  messages UsersOnChats[]
+  id       String            @id @default(auto()) @map("_id") @db.ObjectId
+  userName String            @unique
+  messages UsersOnMessages[]
 }
 
-model Chat {
-  id    String         @id @default(auto()) @map("_id") @db.ObjectId
-  users UsersOnChats[]
+model Message {
+  id        String            @id @default(auto()) @map("_id") @db.ObjectId
+  sender    String            @unique
+  recipient String            @unique
+  body      String
+  title     String
+  users     UsersOnMessages[]
 }
 
-model UsersOnChats {
-  id     String @id @default(auto()) @map("_id") @db.ObjectId
-  chat   Chat   @relation(fields: [chatID], references: [id])
-  chatID String @db.ObjectId
-  user   User   @relation(fields: [userID], references: [id])
-  userID String @db.ObjectId
+model UsersOnMessages {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  message   Message @relation(fields: [messageID], references: [id])
+  messageID String  @db.ObjectId
+  user      User    @relation(fields: [userID], references: [id])
+  userID    String  @db.ObjectId
 }

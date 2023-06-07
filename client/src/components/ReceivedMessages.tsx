@@ -1,17 +1,15 @@
 import { Accordion, AccordionDetails, AccordionSummary, List, ListItem, ListItemText, Typography } from "@mui/material";
-import { Message } from "../types";
+import { Message } from "../misc/types";
 
 export interface ReceivedMessagesProps {
   messages: Message[]
 };
 
 const ReceivedMessages = ({ messages }: ReceivedMessagesProps) => {
-
   return (
     <List
       sx={{
         paddingTop: "20px",
-
       }}
     >
       {

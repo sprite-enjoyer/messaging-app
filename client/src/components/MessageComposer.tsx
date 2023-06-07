@@ -1,6 +1,42 @@
 import { Autocomplete, Box, Button, Container, TextField } from "@mui/material";
+import ServerActions from "../misc/ServerActions";
+import { useContext, useEffect, useState } from "react";
+import { NameContext } from "../App";
+import { Message } from "../misc/types";
 
-const MessageComposer = () => {
+export interface MessageComposerProps {
+  serverActions: ServerActions,
+}
+
+const MessageComposer = ({ serverActions }: MessageComposerProps) => {
+
+  const [dbUsers, setDbUsers] = useState<string[]>([]);
+  const [title, setTitle] = useState("");
+  const [recipient, setRecepient] = useState("");
+  const [body, setBody] = useState("");
+  const [open, setOpen] = useState(false);
+  const userName = useContext(NameContext);
+
+  const handleButtonClick = () => {
+    const newMessage: Message = {
+      title: title,
+      recipient: recipient,
+      body: body,
+      sender: userName
+    };
+    serverActions.sendMessage(newMessage);
+  };
+
+  useEffect(() => {
+    if (!open) return;
+    serverActions.getAllUsers()
+      .then(async res => {
+        const result = await res.json() as { data: string[] };
+        setDbUsers(result.data);
+      })
+      .catch(e => console.error(e));
+  }, [open]);
+
   return (
     <Container
       sx={{
@@ -31,16 +67,31 @@ const MessageComposer = () => {
             flex: "1 1",
             padding: "0",
           }}
+          onChange={(e) => setTitle(e.target.value)}
+          value={title}
         />
         <Autocomplete
           disablePortal
-          id="combo-box-demo"
-          options={[]}
-          renderInput={(params) => <TextField {...params} label="Recipient" />}
+          autoComplete
+          clearOnEscape={false}
+          options={dbUsers}
+          open={open}
+          onOpen={() => setOpen(true)}
+          onClose={() => setOpen(false)}
+          onInputChange={(e, value) => setRecepient(value)}
+          value={recipient}
+          renderInput={
+            (params) =>
+              <TextField
+                {...params}
+                label="Recipient"
+              />
+          }
           sx={{
             width: "auto",
             flex: "1 1",
           }}
+
         />
       </Container>
       <TextField
@@ -51,6 +102,7 @@ const MessageComposer = () => {
           flex: "1 1",
           width: "100%",
         }}
+        onChange={(e) => setBody(e.target.value)}
       />
       <Box
         sx={{
@@ -62,6 +114,7 @@ const MessageComposer = () => {
         <Button
           variant="contained"
           size={"large"}
+          onClick={handleButtonClick}
         >
           Send Message
         </Button>
