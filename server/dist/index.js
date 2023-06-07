@@ -10,19 +10,16 @@ const prisma_1 = require("./prisma");
 const dotenv_1 = __importDefault(require("dotenv"));
 const cors_1 = __importDefault(require("cors"));
 dotenv_1.default.config();
+const corsOptions = {
+    origin: [String(process.env.CLIENT_URL)],
+    methods: ["GET", "POST"],
+};
 const PORT = 3000;
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
-app.use((0, cors_1.default)({
-    origin: [String(process.env.CLIENT_URL)],
-    methods: ["GET", "POST"],
-}));
+app.use((0, cors_1.default)(corsOptions));
 const httpServer = (0, http_1.createServer)(app);
-const io = new socket_io_1.Server(httpServer, {
-    cors: {
-        origin: process.env.CLIENT_URL?.toString()
-    }
-});
+const io = new socket_io_1.Server(httpServer, { cors: corsOptions });
 io.on('connection', (socket) => {
     socket.on('send_message', async (message) => {
         io.emit('receive_message', message);

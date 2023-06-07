@@ -4,22 +4,20 @@ import express from "express";
 import { prismaClient } from "./prisma";
 import dotenv from "dotenv";
 import { Message } from "./misc/types";
-import cors from "cors";
+import cors, { CorsOptions } from "cors";
 dotenv.config();
+
+const corsOptions: CorsOptions = {
+  origin: [String(process.env.CLIENT_URL)],
+  methods: ["GET", "POST"],
+};
 
 const PORT = 3000;
 const app = express();
 app.use(express.json());
-app.use(cors({
-  origin: [String(process.env.CLIENT_URL)],
-  methods: ["GET", "POST"],
-}));
+app.use(cors(corsOptions));
 const httpServer = createServer(app);
-const io = new Server(httpServer, {
-  cors: {
-    origin: process.env.CLIENT_URL?.toString()
-  }
-});
+const io = new Server(httpServer, { cors: corsOptions });
 
 io.on('connection', (socket) => {
 
