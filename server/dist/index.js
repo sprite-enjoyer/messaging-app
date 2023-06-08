@@ -11,8 +11,7 @@ const dotenv_1 = __importDefault(require("dotenv"));
 const cors_1 = __importDefault(require("cors"));
 dotenv_1.default.config();
 const corsOptions = {
-    origin: [String(process.env.CLIENT_URL)],
-    methods: ["GET", "POST"],
+    origin: "*",
 };
 const PORT = 3000;
 const app = (0, express_1.default)();

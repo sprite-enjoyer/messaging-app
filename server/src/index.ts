@@ -8,8 +8,7 @@ import cors, { CorsOptions } from "cors";
 dotenv.config();
 
 const corsOptions: CorsOptions = {
-  origin: [String(process.env.CLIENT_URL)],
-  methods: ["GET", "POST"],
+  origin: "*",
 };
 
 const PORT = 3000;
